@@ -70,6 +70,18 @@ Four demos across timescales:</p>
     <span class="stat"><b>480</b> stable behavior changes · 44 unrecognized-behavior flags</span>
   </a>
 </div>
+<div class="cards" style="margin-top:18px">
+  <a class="card" href="dyn_dynamics.html" style="border-left-color:var(--gold)">
+    <div class="cn"><small style="color:var(--gold)">PROTOTYPE</small>Per-(place, activity) dynamics models — the gPC slot</div>
+    <div class="cd">A separate module, deliberately simple: mean-reverting continuous dynamics of speed and turn-rate
+    per (place × activity) context, parameter uncertainty via per-vessel draw mixtures — the interface where
+    generalized polynomial chaos machinery drops in. The entire onboard model is a <b>64 KB readable table</b>. On the
+    same Chesapeake watch it fires on sprint-stop derivative anomalies with <b>zero overlap</b> against the
+    transformer's pattern alerts — measured multi-method complementarity.</div>
+    <span class="stat"><b>64 KB</b> total model · 34 (place×activity) contexts</span>
+    <span class="stat"><b>35 alerts</b>, 0 overlap with transformer — complementary coverage</span>
+  </a>
+</div>
 <p class="foot">Data: MarineCadastre AIS (June 2024, 3 ports, 21.8M fixes) · GMRT bathymetry · USACE National Channel
 Framework. Models: small masked trajectory transformers (56-word motion vocabulary + geometry-derived scene streams),
 trained once, frozen; all evaluation cold-start. Each page is a single self-contained HTML file with data embedded —

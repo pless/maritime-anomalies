@@ -42,3 +42,8 @@ embedded.
    classes; 31,640 assessments, 480 stable behavior changes, and 44
    "unrecognized behavior" flags (embedding beyond every known class's
    95th-percentile radius — the "no known activity fits" alert).
+
+**Prototype (separate module):** [Per-(place, activity) dynamics models](https://pless.github.io/maritime-anomalies/dyn_dynamics.html) —
+the gPC slot: OU-family continuous dynamics per (place × activity) context with
+parameter-uncertainty mixtures; 64 KB total model; zero alert overlap with the
+transformer on the same watch (complementary, derivative-vs-pattern coverage).

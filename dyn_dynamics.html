@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Per-(Place, Activity) Dynamics — gPC-slot prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1826;--panel:#0e1f31;--panel2:#122539;--hair:#1c3448;--ink:#dce8f2;--dim:#7d93a8;--faint:#4a6076;--accent:#35c4e8;--warn:#ff5c5c;--ok:#3ddc84;--gold:#f5a623}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:30px 20px 55px}
+.eyebrow{font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:33px;line-height:1.03;margin:6px 0 8px;text-transform:uppercase}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:28px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
+.lede{color:var(--dim);max-width:880px;font-size:11.5px}.lede b{color:var(--ink)}
+.note{color:var(--faint);font-size:11px;margin-bottom:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--dim)}
+.chip{background:var(--panel);border:1px solid var(--hair);border-radius:20px;padding:5px 12px}
+.chip b{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--ink)}
+.chip.gold b{color:var(--gold)}.chip.ok b{color:var(--ok)}.chip.warn b{color:var(--warn)}
+table{border-collapse:collapse;margin-top:8px;font-size:10.5px}
+th,td{border:1px solid var(--hair);padding:5px 8px;text-align:center}
+th{color:var(--faint);font-weight:400;font-size:9px;letter-spacing:.05em;text-transform:uppercase}
+th.rowh{text-align:right}
+td b{font-family:'Barlow Condensed',sans-serif;font-size:13px}
+.ev{background:var(--panel2);border:1px solid var(--hair);border-left:3px solid var(--gold);border-radius:4px;padding:8px 11px;margin-top:7px;font-size:11px}
+.ev .t{color:var(--gold);font-weight:600}.ev .nm{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600}
+.ev .d{color:var(--dim);margin-top:1px}
+.callout{background:var(--panel2);border-left:3px solid var(--gold);padding:11px 14px;margin-top:14px;border-radius:0 4px 4px 0;color:var(--dim);font-size:11.5px;max-width:1060px}
+.callout b{color:var(--ink)}
+.src{color:var(--faint);font-size:10px;margin-top:22px;border-top:1px solid var(--hair);padding-top:9px}
+.tblwrap{overflow-x:auto}
+</style></head><body><div class="wrap">
+<div class="eyebrow">Prototype · gPC slot · Separate module (not part of the demo suite)</div>
+<h1>Per-(place, activity) dynamics models</h1>
+<p class="lede">The architecture's third judge, kept deliberately simple: for each <b>(place type &times; activity
+class)</b> context, a mean-reverting model of continuous speed and turn-rate — equilibrium speed &mu;, reversion rate,
+noise — with <b>parameter uncertainty carried by a mixture over per-vessel parameter draws</b>. This is the interface
+where a partner's <b>generalized polynomial chaos</b> machinery drops in: same contexts, same conditional-normalcy
+question, principled uncertainty propagation instead of the draw-mixture stand-in. Fit on Puget Sound + SF Bay;
+judged on the same cold-start Chesapeake watch as the transformer demos.</p>
+<div class="chips" id="chips"></div>
+
+<h2>The whole model is a readable table</h2>
+<p class="note">Equilibrium speed &mu;<sub>v</sub> (kt) per context — fitted where data supports a full (place,
+activity) fit (bold), otherwise inherited from activity- or place-marginal fallbacks (dim). This table — plus noise
+and reversion parameters — <b>is</b> the onboard normalcy model: no traffic database, no learned weights.</p>
+<div class="tblwrap" id="grid"></div>
+
+<h2>What it flags on the same watch — and why zero overlap matters</h2>
+<p class="note">Alerts on the Jun 7 12:00–18:00 Chesapeake slice, same ≤5% benign watch budget as the transformer.</p>
+<div id="events"></div>
+
+<div class="callout"><b>Complementarity, measured.</b> The dynamics judge fired <b>35 alerts on 20
+tracks</b> — with <b>zero overlap</b> (±5 min) against the transformer's alerts on the identical watch. The two
+watch different aspects of motion: continuous dynamics punish <i>large derivatives</i> (sprint-stops, hard
+accelerations — mostly fast patrol/pilot craft here), while the token transformer catches <i>pattern</i> anomalies
+(weaving, creeping, place-inconsistency) that barely move the derivatives. Neither subsumes the other — the
+multi-method ensemble is the coverage argument. Caveats, honestly: disjointness also means neither validates the
+other's alerts; several dynamics alerts inherit the stale trailing behavior label (a sprinting pilot boat still
+labeled "moored"); and the draw-mixture is a placeholder for real gPC uncertainty propagation.</div>
+
+<div class="src">MarineCadastre AIS (Jun 2024) · place = bathymetry+chart tokens · activity = long-model behavior
+classes (cached codebook) · OU-family fit + live-rule calibration (benign track FAR 4.0%) · CPU-only · public data.
+Removal: delete code/dyn_models.py, code/build_dyn_viz.py, viz/dyn_dynamics.html, models/dyn_params.json,
+data/enc/dyn_assessment.json.</div>
+</div>
+<script>
+const D={"model":"OU-family per-(place,activity) dynamics + parameter-uncertainty mixture (gPC slot)","kb":64.3,"thr":{"working":28.55,"transit":9.94,"station":16.4,"fallback":32.29},"q":0.9975,"pnames":["shallow open bay","harbor / shoreline edge","steep deep channel","deep open water","nearshore shallows","steep shoal edge","tidal flat / shoal","open basin"],"anames":["stop-and-go working","stop-and-go working","stop-and-go tending (pots/traps)","anchored, repositioning","slow area-working (fishing-like)","directed transit","shoreline passage (working the coast)","moored / at anchor"],"grid_mu":[[8.96,2.28,11.81,8.96,20.67,3.07,7.25,8.96],[6.38,1.35,6.38,6.38,6.38,6.38,6.38,6.38],[2.14,0.81,2.14,2.14,2.14,1.6,0.71,2.14],[4.58,1.29,8.09,4.58,8.48,2.64,3.5,4.58],[3.6,3.8,3.8,3.8,5.02,3.8,2.08,3.8],[6.31,0.31,5.94,5.69,5.76,2.77,4.66,4.84],[6.24,1.49,10.94,5.21,5.66,3.27,2.69,5.21],[0.31,0.19,0.31,0.31,1.34,0.27,0.16,0.31]],"grid_full":[[false,true,true,false,true,true,true,false],[false,true,false,false,false,false,false,false],[false,true,false,false,false,true,true,false],[false,true,true,false,true,true,true,false],[true,false,false,false,true,false,true,false],[true,true,true,true,true,true,true,false],[true,true,true,false,true,true,true,false],[false,true,false,false,true,true,true,false]],"n_contexts_full":34,"n_events":35,"n_tracks_alerted":20,"overlap_cond":0,"overlap_base":0,"tf_base":15,"tf_cond":29,"events":[{"mmsi":368042970,"seg":1,"name":"HAMPTON ROADS","cls":"gov/pilot","min":66,"nll":31.66,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"slows >20\u219212 kt, turning"},{"mmsi":368116870,"seg":5,"name":"SEAWARD 10","cls":"pleasure","min":93,"nll":32.87,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"varies 2\u20138 kt, hard turning"},{"mmsi":367711530,"seg":2,"name":"CAPE CHARLES","cls":"gov/pilot","min":99,"nll":34.19,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"accelerates 2\u2192>20 kt, hard turning"},{"mmsi":338363284,"seg":2,"name":"FIRE BOAT 1","cls":"gov/pilot","min":104,"nll":33.5,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"slows >20\u21922 kt, hard turning"},{"mmsi":367711530,"seg":2,"name":"CAPE CHARLES","cls":"gov/pilot","min":110,"nll":19.9,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"slows >20\u219212 kt, hard turning"},{"mmsi":338488477,"seg":0,"name":"NOR'EASTER","cls":"pleasure","min":119,"nll":16.55,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"accelerates 0.5\u21928 kt, hard turning"},{"mmsi":367457590,"seg":1,"name":"WENDY MORAN","cls":"tug/tow","min":143,"nll":18.86,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"varies 0.5\u20138 kt, weaving"},{"mmsi":368116870,"seg":5,"name":"SEAWARD 10","cls":"pleasure","min":144,"nll":32.67,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"accelerates 0.5\u21928 kt, hard turning"},{"mmsi":369493699,"seg":10,"name":"CG45699","cls":"gov/pilot","min":145,"nll":48.06,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"varies 8\u2013>20 kt, turning"},{"mmsi":338363284,"seg":2,"name":"FIRE BOAT 1","cls":"gov/pilot","min":152,"nll":35.91,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"accelerates 5\u2192>20 kt, turning"},{"mmsi":338363284,"seg":2,"name":"FIRE BOAT 1","cls":"gov/pilot","min":155,"nll":40.71,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"accelerates 5\u2192>20 kt, turning"},{"mmsi":338926112,"seg":1,"name":"CG26112","cls":"gov/pilot","min":156,"nll":51.87,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"accelerates 2\u2192>20 kt, hard turning"},{"mmsi":368116870,"seg":5,"name":"SEAWARD 10","cls":"pleasure","min":165,"nll":43.66,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"varies 0.5\u20138 kt, weaving"},{"mmsi":369990278,"seg":0,"name":"CG29278","cls":"gov/pilot","min":202,"nll":40.31,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"varies 5\u2013>20 kt, weaving"},{"mmsi":368139320,"seg":1,"name":"RICHMOND","cls":"gov/pilot","min":206,"nll":51.91,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"accelerates 5\u2192>20 kt, hard turning"},{"mmsi":368139320,"seg":1,"name":"RICHMOND","cls":"gov/pilot","min":215,"nll":31.35,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"varies 16\u2013>20 kt, hard turning"},{"mmsi":368260380,"seg":0,"name":"MOONSTRUCK","cls":"pleasure","min":226,"nll":12.91,"thr":9.94,"behavior":"directed transit","group":"transit","desc":"varies 5\u2013>20 kt, turning"},{"mmsi":368116870,"seg":5,"name":"SEAWARD 10","cls":"pleasure","min":232,"nll":37.73,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"varies 0.5\u20138 kt, hard turning"},{"mmsi":369493601,"seg":13,"name":"CG45601","cls":"gov/pilot","min":238,"nll":34.58,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"accelerates 5\u2192>20 kt, turning"},{"mmsi":368139320,"seg":1,"name":"RICHMOND","cls":"gov/pilot","min":240,"nll":72.69,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"slows >20\u21925 kt, turning"},{"mmsi":369914086,"seg":1,"name":"USN 40PB1802","cls":"other","min":246,"nll":37.82,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"accelerates 0.5\u2192>20 kt, weaving"},{"mmsi":338143326,"seg":0,"name":"JCCPD MP1","cls":"gov/pilot","min":252,"nll":10.62,"thr":9.94,"behavior":"directed transit","group":"transit","desc":"varies 2\u201316 kt, weaving"},{"mmsi":366902060,"seg":1,"name":"BIG STONE PRIDE","cls":"passenger","min":262,"nll":21.19,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"accelerates 8\u2192>20 kt, weaving"},{"mmsi":369493601,"seg":13,"name":"CG45601","cls":"gov/pilot","min":268,"nll":43.41,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"varies 2\u2013>20 kt, turning"},{"mmsi":338361819,"seg":2,"name":"MAR KAT","cls":"pleasure","min":274,"nll":24.34,"thr":16.4,"behavior":"moored / at anchor","group":"station","desc":"accelerates 0.5\u219220 kt, hard turning"},{"mmsi":368116870,"seg":5,"name":"SEAWARD 10","cls":"pleasure","min":276,"nll":33.55,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"accelerates 0.5\u219212 kt, hard turning"},{"mmsi":338117838,"seg":6,"name":"VBFD FB1","cls":"gov/pilot","min":277,"nll":13.06,"thr":9.94,"behavior":"directed transit","group":"transit","desc":"accelerates 5\u2192>20 kt, turning"},{"mmsi":338143326,"seg":0,"name":"JCCPD MP1","cls":"gov/pilot","min":290,"nll":26.89,"thr":9.94,"behavior":"directed transit","group":"transit","desc":"accelerates 2\u219220 kt, weaving"},{"mmsi":369914086,"seg":1,"name":"USN 40PB1802","cls":"other","min":294,"nll":39.89,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"accelerates 8\u2192>20 kt, steady heading"},{"mmsi":367711530,"seg":2,"name":"CAPE CHARLES","cls":"gov/pilot","min":330,"nll":16.68,"thr":16.4,"behavior":"anchored, repositioning","group":"station","desc":"accelerates 2\u2192>20 kt, weaving"},{"mmsi":369914086,"seg":1,"name":"USN 40PB1802","cls":"other","min":331,"nll":44.99,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"varies 2\u2013>20 kt, weaving"},{"mmsi":366880750,"seg":12,"name":"VIRGINIA","cls":"gov/pilot","min":337,"nll":35.05,"thr":32.29,"behavior":"warming up","group":"fallback","desc":"varies 2\u2013>20 kt, hard turning"},{"mmsi":338496704,"seg":6,"name":"FIREBOAT 13 NORFOLK","cls":"gov/pilot","min":339,"nll":22.31,"thr":9.94,"behavior":"directed transit","group":"transit","desc":"accelerates 2\u2192>20 kt, turning"},{"mmsi":369493692,"seg":4,"name":"CG45692","cls":"gov/pilot","min":353,"nll":33.55,"thr":28.55,"behavior":"stop-and-go tending (pots/traps)","group":"working","desc":"varies 0.5\u2013>20 kt, weaving"},{"mmsi":369914086,"seg":1,"name":"USN 40PB1802","cls":"other","min":353,"nll":68.89,"thr":32.29,"behavior":"unrecognized","group":"fallback","desc":"slows >20\u21928 kt, hard turning"}]};
+document.getElementById('chips').innerHTML=
+ `<span class="chip gold"><b>${D.kb} KB</b> total model size</span>
+  <span class="chip"><b>${D.n_contexts_full}</b> full (place×activity) contexts</span>
+  <span class="chip ok"><b>4.0%</b> benign watch FAR (calibrated)</span>
+  <span class="chip warn"><b>${D.n_events}</b> alerts / ${D.n_tracks_alerted} tracks on the CB watch</span>
+  <span class="chip"><b>${D.overlap_cond}</b> overlap with transformer alerts (±5 min)</span>`;
+// mu_v grid
+const shortP=D.pnames.map(p=>p.replace(' / ','/').split(' ').slice(0,2).join(' '));
+const shortA=D.anames.map(a=>a.length>26?a.slice(0,24)+'…':a);
+let h='<table><tr><th class="rowh">activity \\ place</th>'+shortP.map(p=>`<th>${p}</th>`).join('')+'</tr>';
+const vals=D.grid_mu.flat().filter(x=>x!=null);
+const vmax=Math.max(...vals);
+for(let a=0;a<8;a++){
+  h+=`<tr><th class="rowh">${shortA[a]}</th>`;
+  for(let p=0;p<8;p++){
+    const v=D.grid_mu[a][p];
+    if(v==null){h+='<td style="color:#33475c">—</td>';continue;}
+    const t=Math.min(1,Math.max(0,v/vmax));
+    const bg=`rgba(53,196,232,${0.06+0.38*t})`;
+    h+=`<td style="background:${bg};${D.grid_full[a][p]?'':'color:var(--faint)'}">${D.grid_full[a][p]?'<b>'+v.toFixed(1)+'</b>':v.toFixed(1)}</td>`;
+  }
+  h+='</tr>';
+}
+h+='</table>';
+document.getElementById('grid').innerHTML=h;
+function hhmm(m){const t=12*60+m;return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')+'Z';}
+document.getElementById('events').innerHTML=D.events.map(e=>
+ `<div class="ev"><span class="t">${hhmm(e.min)}</span> <span class="nm">${e.name||('MMSI '+e.mmsi)}</span>
+  <span style="color:var(--faint)"> · ${e.cls}</span>
+  <span style="float:right;color:var(--gold)">nll ${e.nll} vs thr ${e.thr}</span>
+  <div class="d">${e.desc} — behavior: ${e.behavior} (${e.group} threshold)</div></div>`).join('');
+</script></body></html>
