@@ -9,7 +9,7 @@ channels) instead of accumulated traffic history. Models are trained on Puget
 Sound + SF Bay and **frozen**; every result is evaluated on Hampton Roads /
 Chesapeake — a port the models never saw.
 
-Three demos, three timescales:
+Four demos across timescales:
 
 1. **[Retrospective anomalies, scene-explained](https://pless.github.io/maritime-anomalies/enc_before_after.html)** —
    211 raw alerts → 107 genuine after three *named, mechanistically explained*
@@ -35,3 +35,10 @@ Three demos, three timescales:
 All data public: MarineCadastre AIS (June 2024), GMRT bathymetry, USACE National
 Channel Framework. CPU-only. Each page is one self-contained HTML file with data
 embedded.
+
+4. **[Play-forward behavior recognition](https://pless.github.io/maritime-anomalies/live_behaviors.html)** —
+   the long-horizon model run causally through a full day: every 10 minutes each
+   vessel's trailing (≤8.5 h) history is classified into the learned behavior
+   classes; 31,640 assessments, 480 stable behavior changes, and 44
+   "unrecognized behavior" flags (embedding beyond every known class's
+   95th-percentile radius — the "no known activity fits" alert).

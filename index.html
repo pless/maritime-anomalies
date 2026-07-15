@@ -28,7 +28,7 @@ a.card:hover{border-color:var(--accent)}
 geography (bathymetry, charted channels) instead of accumulated traffic history. One shared 8-word "place vocabulary"
 learned from seafloor geometry with zero traffic data, small trajectory models trained on <b>Puget Sound + SF Bay</b>
 and then frozen, everything below evaluated on <b>Hampton Roads / Chesapeake — a port the models never saw</b>.
-Three demos, three timescales:</p>
+Four demos across timescales:</p>
 <div class="cards">
   <a class="card" href="enc_before_after.html">
     <div class="cn"><small>01</small>Retrospective anomalies, scene-explained</div>
@@ -57,6 +57,15 @@ Three demos, three timescales:</p>
     predictable.</div>
     <span class="stat">rhythmic work: <b>−7.1% NLL</b> from 8× more history</span>
     <span class="stat">fishing-like classes enriched <b>2.5–3.8×</b>, assigned cold</span>
+  </a>
+  <a class="card" href="live_behaviors.html">
+    <div class="cn"><small>04</small>Play-forward behavior recognition</div>
+    <div class="cd">The long-horizon model run as it would be used: a full-day causal replay where every 10 minutes
+    each vessel's trailing history (up to 8.5 h, past only) is classified into the learned behavior classes — labels
+    form as evidence accumulates, change with activity, and occasionally fail: <i>unrecognized behavior</i> = the
+    embedding matches no known class, the "no known activity fits" alert.</div>
+    <span class="stat"><b>31,640</b> causal assessments over 24 h · 407 tracks</span>
+    <span class="stat"><b>480</b> stable behavior changes · 44 unrecognized-behavior flags</span>
   </a>
 </div>
 <p class="foot">Data: MarineCadastre AIS (June 2024, 3 ports, 21.8M fixes) · GMRT bathymetry · USACE National Channel
