@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Long-Horizon Behaviors — cold-start Chesapeake</title>
+<title>Long-Horizon Behaviors — cold-start Lower Chesapeake</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a1826;--panel:#0e1f31;--panel2:#122539;--hair:#1c3448;--ink:#dce8f2;--dim:#7d93a8;--faint:#4a6076;--accent:#35c4e8;--warn:#ff5c5c;--ok:#3ddc84;--gold:#f5a623}
@@ -50,7 +50,7 @@ canvas{display:block;background:#060f19;border:1px solid var(--hair);border-radi
 <p class="lede">Feasibility for the <b>long-timescale half</b> of a multi-method PoL architecture (gPC continuous
 dynamics at short timescales; transformers over discretized trajectories at long timescales). A <b>256-step,
 2-minute-token transformer (~8.5 h of context)</b> was trained with 16–64-minute span masking on Puget Sound +
-SF Bay, then applied to <b>Chesapeake windows it never saw</b>. Its window embeddings, clustered on the training
+SF Bay, then applied to <b>lower-Chesapeake windows it never saw</b>. Its window embeddings, clustered on the training
 ports only, land on <b>nameable multi-hour behaviors</b> — stop-and-go pot/trap tending, slow area-working
 (fishing-enriched 2.5×), shoreline passage (fishing-enriched 3.8×), directed transit — and the same clusters
 reappear with matching signatures in the new region. The context experiment splits cleanly: generic underway
@@ -59,13 +59,13 @@ long context pays exactly where behavior has long structure.</p>
 <div class="chips" id="chips"></div>
 
 <h2>Does long context actually help? (cold-start)</h2>
-<p class="note">Predicting the same masked 30-minute span in unseen Chesapeake, varying how much history the model
+<p class="note">Predicting the same masked 30-minute span in the unseen lower Chesapeake, varying how much history the model
 may attend to. Falling NLL = attention exploits multi-hour structure, in a region with zero training data.</p>
 <div class="chart"><canvas id="ctx" width="1120" height="230" style="width:100%;height:auto"></canvas></div>
 
-<h2>Discovered behavior classes — Chesapeake, assigned cold</h2>
+<h2>Discovered behavior classes — lower Chesapeake, assigned cold</h2>
 <p class="note">Clusters were fit on Puget+SF embeddings only. Toggle classes on the map; hover a track.
-Consistency = cosine similarity between a cluster's kinematic signature on the training ports vs Chesapeake
+Consistency = cosine similarity between a cluster's kinematic signature on the training ports vs the lower Chesapeake
 (1.0 = the behavior means the same thing in the new region).</p>
 <div class="cols">
   <div>
@@ -101,7 +101,7 @@ const CORR={"lat0":36.749997648622795,"lon0":-76.550537109375,"nrows":1275,"ncol
 const VC={}; CORR.vocab.forEach(v=>VC[v.id]=v);
 document.getElementById('chips').innerHTML=
  `<span class="chip"><b>${(FZ.n.PS+FZ.n.SF).toLocaleString()}</b> training windows (PS+SF)</span>
-  <span class="chip acc"><b>${FZ.n.CB.toLocaleString()}</b> Chesapeake windows · never trained on</span>
+  <span class="chip acc"><b>${FZ.n.CB.toLocaleString()}</b> lower Chesapeake windows · never trained on</span>
   <span class="chip"><b>~8.5 h</b> context · 2-min tokens</span>
   <span class="chip ok"><b>${(FZ.clusters.reduce((a,c)=>a+c.consistency,0)/FZ.clusters.length).toFixed(2)}</b> mean cross-region signature consistency</span>`;
 

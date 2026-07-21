@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live Threat Assessment — Hampton Roads (causal, cold-start)</title>
+<title>Live Threat Assessment — Hampton Roads / Lower Chesapeake (causal, cold-start)</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a1826;--panel:#0e1f31;--panel2:#122539;--hair:#1c3448;--ink:#dce8f2;--dim:#7d93a8;--faint:#4a6076;--accent:#35c4e8;--warn:#ff5c5c;--ok:#3ddc84;--gold:#f5a623}
@@ -63,8 +63,8 @@ canvas#spark{width:100%;height:64px;display:block;margin-top:9px;background:#0c1
 <div class="sitenav"><a href="index.html" style="border:none">SCENE-CONDITIONED MARITIME PoL</a> — <a href="enc_before_after.html">1 · retrospective anomalies</a> · <b>2 · live threat assessment</b> · <a href="long_behaviors.html">3 · multi-hour behaviors</a> · <a href="live_behaviors.html">4 · play-forward behaviors</a></div>
 
 <div class="eyebrow">Scene-Conditioned Maritime Pattern-of-Life · v2 · Causal / Forward-Looking</div>
-<h1>Live threat assessment — Hampton Roads</h1>
-<p class="lede">Replay of the busiest 6 hours in the held-out port (<b>June 7 2024, 12:00–18:00 UTC</b>, 360 tracks).
+<h1>Live threat assessment — Hampton Roads / lower Chesapeake</h1>
+<p class="lede">Replay of 6 hours of the held-out region, Hampton Roads / lower Chesapeake Bay (<b>June 7, 2024, 12:00–18:00 UTC</b>, 360 tracks).
 Every minute, each vessel's <b>most recent 12 minutes</b> are scored against the model's expectation given only its
 <b>past</b> — no future context, exactly as a live system would run. Thresholds are calibrated against the live decision
 rule itself (≤5% of benign tracks per 6-hour watch). <b>Toggle the conditioning</b>: place-only (v2), or
@@ -266,5 +266,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){selId=-1;selShown=n
   if(e.key===' '){e.preventDefault();playing?pause():play();}});
 document.getElementById('mBase').onclick=()=>{MODE='base';document.getElementById('mBase').classList.add('active');document.getElementById('mCond').classList.remove('active');feedShown=-1;selShown=null;draw();};
 document.getElementById('mCond').onclick=()=>{MODE='cond';document.getElementById('mCond').classList.add('active');document.getElementById('mBase').classList.remove('active');feedShown=-1;selShown=null;draw();};
-draw();play();
+{const h=new URLSearchParams(location.hash.slice(1));
+ if(h.has('m')){MODE='cond';setTau(+h.get('m')); if(h.has('sel'))selId=+h.get('sel');}}
+draw();
+{const h=new URLSearchParams(location.hash.slice(1)); h.has('m')?pause():play();}
 </script></body></html>

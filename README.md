@@ -6,8 +6,8 @@ Prototypes for database-free, cold-start, explainable maritime pattern-of-life
 analysis: behavioral normalcy conditioned on *place*, where place is encoded from
 static chart-like geography (bathymetry-derived place vocabulary + USACE charted
 channels) instead of accumulated traffic history. Models are trained on Puget
-Sound + SF Bay and **frozen**; every result is evaluated on Hampton Roads /
-Chesapeake — a port the models never saw.
+Sound + SF Bay and **frozen**; every result is evaluated on Hampton Roads / lower
+Chesapeake Bay — a region the models never saw.
 
 Four demos across timescales:
 
@@ -28,7 +28,7 @@ Four demos across timescales:
    a 256-step, 2-minute-token transformer (~8.5 h context) discovers nameable
    long-horizon behaviors (pot/trap tending, slow area-working, shoreline
    passage, directed transit) on the training ports and re-finds them, signatures
-   matching, in the never-seen Chesapeake. Generic motion saturates at ~1.6 h of
+   matching, in the never-seen lower Chesapeake. Generic motion saturates at ~1.6 h of
    context; rhythmic work keeps improving to 6.7 h. Includes a look-ahead /
    directional scene-cue ablation for feature-following turns.
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scene-Explained Anomalies — Hampton Roads (cold-start)</title>
+<title>Scene-Explained Anomalies — Hampton Roads / Lower Chesapeake (cold-start)</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a1826;--panel:#0e1f31;--panel2:#122539;--hair:#1c3448;--ink:#dce8f2;--dim:#7d93a8;--faint:#4a6076;--accent:#35c4e8;--warn:#ff5c5c;--ok:#3ddc84;--gold:#f5a623;--mag:#e57bb1}
@@ -88,7 +88,7 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--hair);border-
 <p class="lede">The place-conditioned model flags motion that is improbable <b>for the kind of place it happens in</b>.
 After clearing the dredged-cut chart artifacts and suppressing get-underway / anchoring transitions (a
 stop&rarr;cruise ramp the small model can't reconstruct), <b id="nleft"></b> genuine anomalies remain in
-Hampton Roads. Each below carries its own reasoning: what the vessel did, what the model <b>expects there</b>, and the
+Hampton Roads / lower Chesapeake Bay. Each below carries its own reasoning: what the vessel did, what the model <b>expects there</b>, and the
 counterfactual&mdash;<b>the place where this motion <i>would</i> be normal.</b> That last line is the scene-understanding
 win: the anomaly is localized to the place, not just the track.</p>
 
@@ -163,7 +163,7 @@ is a conformal quantile of its scores. The chart integration never touched a wei
 <i>inputs</i>, which is precisely the operational argument for scene-conditioned design.</div>
 
 <div class="src">MarineCadastre AIS (Jun 2024) · GMRT bathymetry · USACE National Channel Framework · span-mask TrajBERT-style
-scorer (scene-aware arm, frozen) · CPU-only · public data. Trained on Puget Sound + SF Bay; Hampton Roads held out entirely.</div>
+scorer (scene-aware arm, frozen) · CPU-only · public data. Trained on Puget Sound + SF Bay; Hampton Roads / lower Chesapeake held out entirely.</div>
 </div>
 <div class="ov" id="ov"><div class="modal">
   <div class="mh"><div><div class="mtitle" id="mTitle"></div><div class="msub" id="mSub"></div></div>
